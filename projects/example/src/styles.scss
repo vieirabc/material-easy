@@ -1,0 +1,24 @@
+/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@use '../../../dist/vieirabc/me' as me;
+
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap');
+* {
+  font-size: 16px;
+  font-family: 'Comfortaa', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+$font-family: ('Comfortaa', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif);
+@debug me.define-global-font($font-family);
+
+@include mat.core();
+
+$my-theme: mat.define-light-theme((
+ color: (
+   primary: me.get-palette(primary),
+   accent: me.get-palette(accent),
+   warn: me.get-palette(warn),
+ ),
+ typography: me.get-config()
+));
+
+@include me.init($my-theme);

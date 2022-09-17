@@ -2,6 +2,14 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "@vieirabc/me": [
+        "dist/vieirabc/me"
+      ],
+      "@vieirabc/me/flex": [
+        "dist/vieirabc/me/flex"
+      ],
+    },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,

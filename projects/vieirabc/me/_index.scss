@@ -1,0 +1,104 @@
+@use 'sass:map';
+@use 'sass:list';
+@use '../../../node_modules/@angular/material/' as mat;
+@use './styles/layouts/palettes' as palettes;
+@use './styles/layouts/typography.scss' as type;
+
+// Typography Configs
+
+/// SET all-typography-levels
+/// @param { map } $levels
+@function set-levels($levels) {
+  @return type.set-levels($levels);
+}
+/// SET typography-level
+/// @param { font-size } $font-size
+/// @param { font-weight } $font-weight
+/// @param { line-height } $line-height
+/// @param { letter-spacing } $letter-spacing
+@function set-level($level-name, $font-size, $font-weight: 400, $line-height: 1, $letter-spacing: normal) {
+  @return type.set-level($level-name, $font-size, $line-height, $font-weight, $letter-spacing);
+}
+/// GET typography-level
+@function get-level($level-name) {
+  @return type.get-level($level-name);
+}
+
+/// GET typography-level-font-size
+@function font-size($level) {
+  @return type.get-level($level, font-size);
+}
+/// GET typography-level-line-height
+@function line-height($level) {
+  @return type.get-level($level, line-height);
+}
+/// GET typography-level-font-weight
+@function font-weight($level) {
+  @return type.get-level($level, font-weight);
+}
+/// GET typography-level-letter-spacing
+@function letter-spacing($level) {
+  @return type.get-level($level, letter-spacing);
+}
+
+/// SET global-font-family
+@function define-global-font($font-family) {
+  @return type.set-font-family($font-family);
+}
+/// GET global-font-family
+@function get-global-font() {
+  @return type.get-font-family();
+}
+
+@function get-config() {
+  @return type.get-config();
+}
+
+@mixin force-level($level) {
+  font-family: get-global-font();
+  font-size: font-size($level);
+  font-weight: font-weight($level);
+  line-height: line-height($level);
+  letter-spacing: letter-spacing($level);
+}
+
+@mixin init($my-theme) {
+  @include mat.core-theme($my-theme);
+
+  .mat-display-4, .mat-typography .mat-display-4 { @include force-level(display-4); }
+  .mat-display-3, .mat-typography .mat-display-3 { @include force-level(display-3); }
+  .mat-display-2, .mat-typography .mat-display-2 { @include force-level(display-2); }
+  .mat-display-1, .mat-typography .mat-display-1 { @include force-level(display-1); }
+
+  .mat-h1, .mat-headline, .mat-typography .mat-h1, .mat-typography .mat-headline, .mat-typography h1 { @include force-level(headline); }
+  .mat-h2, .mat-title, .mat-typography .mat-h2, .mat-typography .mat-title, .mat-typography h2 { @include force-level(title); }
+  .mat-h3, .mat-subheading-2, .mat-typography .mat-h3, .mat-typography .mat-subheading-2, .mat-typography h3 { @include force-level(subheading-2); }
+  .mat-h4, .mat-subheading-1, .mat-typography .mat-h4, .mat-typography .mat-subheading-1, .mat-typography h4 { @include force-level(subheading-1); }
+
+  .mat-body-strong, .mat-body-2, .mat-typography .mat-body-strong, .mat-typography .mat-body-2 { @include force-level(body-1); }
+  .mat-body, .mat-body-1, .mat-typography .mat-body, .mat-typography .mat-body-1, .mat-typography { @include force-level(body-2); }
+  .mat-small, .mat-caption, .mat-typography .mat-small, .mat-typography .mat-caption { @include force-level(caption); }
+
+  .mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button, .mat-fab, .mat-mini-fab { @include force-level(button); }
+  .mat-form-field { @include force-level(input); }
+}
+
+// Palettes Configs
+
+/// SET palette
+/// @param { map } $palette
+@function set-palette($palette-name, $palette, $default: null, $light: null, $dark: null, $text: null) {
+  @return palettes.set-palette($palette-name, $palette, $default, $light, $dark, $text);
+}
+@function get-palette($palette-name: primary) {
+  @return palettes.get-palette($palette-name);
+}
+
+@function color($color, $palette-name: primary) {
+  @return mat.get-color-from-palette(get-palette($palette-name), $color);
+}
+
+@function color-default($palette-name: primary) { @return color(default, $palette-name); }
+@function color-light($palette-name: primary) { @return color(lighter, $palette-name); }
+@function color-dark($palette-name: primary) { @return color(darker, $palette-name); }
+@function color-text($palette-name: primary) { @return color(text, $palette-name); }
