@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'me-flex',
@@ -11,5 +11,4 @@ export class FlexComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }
