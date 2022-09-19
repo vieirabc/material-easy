@@ -1,0 +1,7 @@
+@function missing-argument($argument, $type) {
+  @return "ERROR: Missing argument #{$argument}: #{$type}.";
+}
+
+@function argument-type($argument, $type) {
+  @return "ERROR: Invalid argument's type #{$argument}: #{$type}";
+}

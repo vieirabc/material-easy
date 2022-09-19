@@ -1,0 +1,125 @@
+@use 'sass:map';
+
+$map: (
+  display-4: (
+    font-size: 8rem,
+    line-height: 1,
+    font-weight: 400,
+    letter-spacing: normal
+  ),
+  display-3: (
+    font-size: 4rem,
+    line-height: 1,
+    font-weight: 400,
+    letter-spacing: normal
+  ),
+  display-2: (
+    font-size: 3rem,
+    line-height: 1,
+    font-weight: 400,
+    letter-spacing: normal
+  ),
+  display-1: (
+    font-size: 2rem,
+    line-height: 1,
+    font-weight: 400,
+    letter-spacing: normal
+  ),
+
+  headline: (
+    font-size: 1.75rem,
+    line-height: 1,
+    font-weight: 400,
+    letter-spacing: normal
+  ),
+  title: (
+    font-size: 1.5rem,
+    line-height: 1,
+    font-weight: 400,
+    letter-spacing: normal
+  ),
+  subheading-2: (
+    font-size: 1.25rem,
+    line-height: 1,
+    font-weight: 400,
+    letter-spacing: normal
+  ),
+  subheading-1: (
+    font-size: 1.125rem,
+    line-height: 1,
+    font-weight: 400,
+    letter-spacing: normal
+  ),
+
+  body-1: (
+    font-size: 1rem,
+    line-height: 1,
+    font-weight: 400,
+    letter-spacing: normal
+  ),
+  body-2: (
+    font-size: 1rem,
+    line-height: 1,
+    font-weight: 400,
+    letter-spacing: normal
+  ),
+  caption: (
+    font-size: .75rem,
+    line-height: 1,
+    font-weight: 400,
+    letter-spacing: normal
+  ),
+
+  button: (
+    font-size: .875rem,
+    line-height: 1,
+    font-weight: 400,
+    letter-spacing: normal
+  ),
+  input: (
+    font-size: .875rem,
+    line-height: 1,
+    font-weight: 400,
+    letter-spacing: normal
+  ),
+);
+
+$font-family: (
+  this: ('Segoe UI', Tahoma, Geneva, Verdana, sans-serif)
+);
+
+@function get-font-family() {
+  @return map-get($font-family, this);
+}
+
+
+@function set-font-family($new-font-family) {
+  $font-family: map.set($font-family, this, $new-font-family) !global;
+  @return null;
+}
+
+@function get-level($level-name) {
+  @return map-get($map, $level-name);
+}
+
+@function get-level-att($level-name, $level-att-name) {
+  @return map-get(get-level($level-name), $level-att-name);
+}
+
+@function set-level($level-name, $font-size, $line-height, $font-weight, $letter-spacing) {
+  $level: (
+    font-size: $font-size,
+    line-height: $line-height,
+    font-weight: $font-weight,
+    letter-spacing: $letter-spacing
+  );
+  $map: map.set($map, $level-name, $level) !global;
+  @return null;
+}
+
+@function set-level-att($level-name, $level-att-name, $new-att) {
+  $level: get-level($level-name);
+  $level: map.set($level, $level-att-name, $new-att);
+  $map: map.set($map, $level-name, $level) !global;
+  @return null;
+}

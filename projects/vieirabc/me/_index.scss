@@ -1,104 +1,263 @@
-@use 'sass:map';
 @use 'sass:list';
+@use 'sass:map';
 @use '../../../node_modules/@angular/material/' as mat;
-@use './styles/layouts/palettes' as palettes;
-@use './styles/layouts/typography.scss' as type;
 
-// Typography Configs
+@use './styles/settings/errors' as error;
 
-/// SET all-typography-levels
-/// @param { map } $levels
-@function set-levels($levels) {
-  @return type.set-levels($levels);
-}
-/// SET typography-level
-/// @param { font-size } $font-size
-/// @param { font-weight } $font-weight
-/// @param { line-height } $line-height
-/// @param { letter-spacing } $letter-spacing
-@function set-level($level-name, $font-size, $font-weight: 400, $line-height: 1, $letter-spacing: normal) {
-  @return type.set-level($level-name, $font-size, $line-height, $font-weight, $letter-spacing);
-}
-/// GET typography-level
-@function get-level($level-name) {
-  @return type.get-level($level-name);
-}
+@use './styles/settings/color' as color;
+@use './styles/settings/types' as type;
+@use './styles/settings/material-palettes' as mat-palette;
 
-/// GET typography-level-font-size
-@function font-size($level) {
-  @return type.get-level($level, font-size);
+@use './styles/layouts/styles.scss' as styles;
+
+/*
+** MATERIAL PALETTES
+*
+*
+*/
+@function mat-palette($palette-name: null) {
+  @if $palette-name {
+    @if type-of(unquote('#{$palette-name}')) == string {
+      @if map-has-key(mat-palette.$map, $palette-name) {
+        @return mat-palette.get($palette-name);
+      }
+      @error "ERROR: '#{$palette-name}' not exists in Material Palettes! Check all Material Palettes with the function 'mat-palettes()'.";
+    }
+    @error error.argument-type('$palette-name', 'string');
+  }
+  @error error.missing-argument('$palette-name', 'string');
 }
-/// GET typography-level-line-height
-@function line-height($level) {
-  @return type.get-level($level, line-height);
-}
-/// GET typography-level-font-weight
-@function font-weight($level) {
-  @return type.get-level($level, font-weight);
-}
-/// GET typography-level-letter-spacing
-@function letter-spacing($level) {
-  @return type.get-level($level, letter-spacing);
+@function mat-palettes() {
+  @return 'All Material Palettes: ( red, pink, purple, deep-purple, indigo, blue, light-blue, cyan, teal, green, light-green, lime, yellow, amber, orange, deep-orange, brown, gray, blue-gray )';
 }
 
-/// SET global-font-family
-@function define-global-font($font-family) {
-  @return type.set-font-family($font-family);
-}
-/// GET global-font-family
-@function get-global-font() {
-  @return type.get-font-family();
-}
-
-@function get-config() {
-  @return type.get-config();
-}
-
-@mixin force-level($level) {
-  font-family: get-global-font();
-  font-size: font-size($level);
-  font-weight: font-weight($level);
-  line-height: line-height($level);
-  letter-spacing: letter-spacing($level);
-}
-
-@mixin init($my-theme) {
-  @include mat.core-theme($my-theme);
-
-  .mat-display-4, .mat-typography .mat-display-4 { @include force-level(display-4); }
-  .mat-display-3, .mat-typography .mat-display-3 { @include force-level(display-3); }
-  .mat-display-2, .mat-typography .mat-display-2 { @include force-level(display-2); }
-  .mat-display-1, .mat-typography .mat-display-1 { @include force-level(display-1); }
-
-  .mat-h1, .mat-headline, .mat-typography .mat-h1, .mat-typography .mat-headline, .mat-typography h1 { @include force-level(headline); }
-  .mat-h2, .mat-title, .mat-typography .mat-h2, .mat-typography .mat-title, .mat-typography h2 { @include force-level(title); }
-  .mat-h3, .mat-subheading-2, .mat-typography .mat-h3, .mat-typography .mat-subheading-2, .mat-typography h3 { @include force-level(subheading-2); }
-  .mat-h4, .mat-subheading-1, .mat-typography .mat-h4, .mat-typography .mat-subheading-1, .mat-typography h4 { @include force-level(subheading-1); }
-
-  .mat-body-strong, .mat-body-2, .mat-typography .mat-body-strong, .mat-typography .mat-body-2 { @include force-level(body-1); }
-  .mat-body, .mat-body-1, .mat-typography .mat-body, .mat-typography .mat-body-1, .mat-typography { @include force-level(body-2); }
-  .mat-small, .mat-caption, .mat-typography .mat-small, .mat-typography .mat-caption { @include force-level(caption); }
-
-  .mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button, .mat-fab, .mat-mini-fab { @include force-level(button); }
-  .mat-form-field { @include force-level(input); }
-}
-
-// Palettes Configs
-
-/// SET palette
-/// @param { map } $palette
-@function set-palette($palette-name, $palette, $default: null, $light: null, $dark: null, $text: null) {
-  @return palettes.set-palette($palette-name, $palette, $default, $light, $dark, $text);
-}
+/*
+** COLORS CONFIGURATION
+*
+*
+*/
 @function get-palette($palette-name: primary) {
-  @return palettes.get-palette($palette-name);
+  @if map-has-key(color.$map, $palette-name) {
+    @return mat.define-palette(color.get($palette-name));
+  }
+  @error error.argument-type('$palette-name', 'primary | accent | warn');
 }
-
-@function color($color, $palette-name: primary) {
+@function set-palette($palette-name, $new-palette) {
+  @if map-has-key(color.$map, $palette-name) {
+    @if type-of($new-palette) == map {
+      @return color.set($palette-name, $new-palette);
+    }
+    @error error.argument-type('$new-palette', 'map');
+  }
+  @error error.argument-type('$palette-name', 'primary | accent | warn');
+}
+@function get-color($color: default, $palette-name: primary) {
   @return mat.get-color-from-palette(get-palette($palette-name), $color);
 }
 
-@function color-default($palette-name: primary) { @return color(default, $palette-name); }
-@function color-light($palette-name: primary) { @return color(lighter, $palette-name); }
-@function color-dark($palette-name: primary) { @return color(darker, $palette-name); }
-@function color-text($palette-name: primary) { @return color(text, $palette-name); }
+/*
+** TYPOGRAPHYS CONFIGURATIONS
+*
+*
+*/
+@function font-family() { @return type.get-font-family(); }
+@function set-font-family($new-font-family) {
+  @if type-of($new-font-family) == list {
+    @return type.set-font-family($new-font-family);
+  }
+  @error error.argument-type('$new-font-family', 'list');
+}
+
+@function get-level($level-name) {
+  @if map-has-key(type.$map, $level-name) {
+    @return mat.define-typography-level(
+      type.get-level-att($level-name, font-size),
+      type.get-level-att($level-name, line-height),
+      type.get-level-att($level-name, font-weight),
+      type.get-font-family(),
+      type.get-level-att($level-name, letter-spacing),
+    );
+  }
+  @error "ERROR: '#{$level-name}' not exists in Material Levels! Check all Material Levels with the function 'mat-levels()'.";
+}
+@function mat-levels() {
+  @return "All Material Levels: ( display-4, display-3, display-2, display-1, headline, title, subheading-2, subheading-1, body-1, body-2, caption, button, input )";
+}
+@function set-level($level-name, $font-size, $line-height, $font-weight, $letter-spacing) {
+  @if map-has-key(type.$map, $level-name) {
+    @return type.set-level($level-name, $font-size, $line-height, $font-weight, $letter-spacing);
+  }
+  @error "ERROR: '#{$level-name}' not exists in Material Levels! Check all Material Levels with the function 'mat-levels()'.";
+}
+
+@function get-font-size($level-name) {
+  @if map-has-key(type.$map, $level-name) {
+    @return type.get-level-att($level-name, font-size);
+  }
+  @error "ERROR: '#{$level-name}' not exists in Material Levels! Check all Material Levels with the function 'mat-levels()'.";
+}
+@function get-line-height($level-name) {
+  @if map-has-key(type.$map, $level-name) {
+    @return type.get-level-att($level-name, line-height);
+  }
+  @error "ERROR: '#{$level-name}' not exists in Material Levels! Check all Material Levels with the function 'mat-levels()'.";
+}
+@function get-font-weight($level-name) {
+  @if map-has-key(type.$map, $level-name) {
+    @return type.get-level-att($level-name, font-weight);
+  }
+  @error "ERROR: '#{$level-name}' not exists in Material Levels! Check all Material Levels with the function 'mat-levels()'.";
+}
+@function get-letter-spacing($level-name) {
+  @if map-has-key(type.$map, $level-name) {
+    @return type.get-level-att($level-name, letter-spacing);
+  }
+  @error "ERROR: '#{$level-name}' not exists in Material Levels! Check all Material Levels with the function 'mat-levels()'.";
+}
+
+@function set-font-size($level-name, $new-att) {
+  @if map-has-key(type.$map, $level-name) {
+    @return type.set-level-att($level-name, font-size, $new-att);
+  }
+  @error "ERROR: '#{$level-name}' not exists in Material Levels! Check all Material Levels with the function 'mat-levels()'.";
+}
+@function set-line-height($level-name, $new-att) {
+  @if map-has-key(type.$map, $level-name) {
+    @return type.set-level-att($level-name, line-height, $new-att);
+  }
+  @error "ERROR: '#{$level-name}' not exists in Material Levels! Check all Material Levels with the function 'mat-levels()'.";
+}
+@function set-font-weight($level-name, $new-att) {
+  @if map-has-key(type.$map, $level-name) {
+    @return type.set-level-att($level-name, font-weight, $new-att);
+  }
+  @error "ERROR: '#{$level-name}' not exists in Material Levels! Check all Material Levels with the function 'mat-levels()'.";
+}
+@function set-letter-spacing($level-name, $new-att) {
+  @if map-has-key(type.$map, $level-name) {
+    @return type.set-level-att($level-name, letter-spacing, $new-att);
+  }
+  @error "ERROR: '#{$level-name}' not exists in Material Levels! Check all Material Levels with the function 'mat-levels()'.";
+}
+
+@function get-config() {
+  @return mat.define-typography-config(
+    $font-family: font-family(),
+    $display-4: get-level(display-4),
+    $display-3: get-level(display-3),
+    $display-2: get-level(display-2),
+    $display-1: get-level(display-1),
+    $headline: get-level(headline),
+    $title: get-level(title),
+    $subheading-2: get-level(subheading-2),
+    $subheading-1: get-level(subheading-1),
+    $body-1: get-level(body-1),
+    $body-2: get-level(body-2),
+    $caption: get-level(caption),
+    $button: get-level(button),
+    $input: get-level(input),
+  );
+}
+
+@mixin force-level($level) {
+  font-family: font-family();
+  font-size: get-font-size($level);
+  font-weight: get-font-weight($level);
+  line-height: get-line-height($level);
+  letter-spacing: get-letter-spacing($level);
+}
+
+@mixin core($font-family: null) {
+  @if $font-family {
+    @debug set-font-family($font-family);
+  }
+
+  @include mat.core();
+}
+
+@mixin set-all-classes() {
+  * {
+    margin: 0; padding: 0;
+    font-size: 16px;
+    font-family: font-family();
+  }
+
+  .mat-display-4, .mat-typography .mat-display-4 {
+    @include force-level(display-4);
+    margin: 0;
+  }
+  .mat-display-3, .mat-typography .mat-display-3 {
+    @include force-level(display-3);
+    margin: 0;
+  }
+  .mat-display-2, .mat-typography .mat-display-2 {
+    @include force-level(display-2);
+    margin: 0;
+  }
+  .mat-display-1, .mat-typography .mat-display-1 {
+    @include force-level(display-1);
+    margin: 0;
+  }
+
+  .mat-h1, .mat-headline, .mat-typography .mat-h1, .mat-typography .mat-headline, .mat-typography h1 {
+    @include force-level(headline);
+    margin: 0;
+  }
+  .mat-h2, .mat-title, .mat-typography .mat-h2, .mat-typography .mat-title, .mat-typography h2 {
+    @include force-level(title);
+    margin: 0;
+  }
+  .mat-h3, .mat-subheading-2, .mat-typography .mat-h3, .mat-typography .mat-subheading-2, .mat-typography h3 {
+    @include force-level(subheading-2);
+    margin: 0;
+  }
+  .mat-h4, .mat-subheading-1, .mat-typography .mat-h4, .mat-typography .mat-subheading-1, .mat-typography h4 {
+    @include force-level(subheading-1);
+    margin: 0;
+  }
+
+  .mat-body-strong, .mat-body-2, .mat-typography .mat-body-strong, .mat-typography .mat-body-2 {
+    @include force-level(body-1);
+    margin: 0;
+  }
+  .mat-body, .mat-body-1, .mat-typography .mat-body, .mat-typography .mat-body-1, .mat-typography {
+    @include force-level(body-2);
+    margin: 0;
+  }
+  .mat-small, .mat-caption, .mat-typography .mat-small, .mat-typography .mat-caption {
+    @include force-level(caption);
+    margin: 0;
+  }
+
+  .mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button, .mat-fab, .mat-mini-fab {
+    @include force-level(button);
+    margin: 0;
+  }
+  .mat-form-field {
+    @include force-level(input);
+    margin: 0;
+  }
+}
+
+@mixin init() {
+  @if color.get(warn) == () {
+    $run: set-palette(warn, mat-palette(red));
+  };
+
+  $my-theme: mat.define-light-theme((
+    color: (
+      primary: get-palette(primary),
+      accent: get-palette(accent),
+      warn: get-palette(warn),
+    ),
+    typography: get-config()
+  ));
+
+  @include mat.core-theme($my-theme);
+  @include set-all-classes();
+  // @include me-classes();
+
+  // @debug "Material Easy setup Successful!";
+}
+
+@include init();

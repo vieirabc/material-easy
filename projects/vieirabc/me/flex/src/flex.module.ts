@@ -4,19 +4,16 @@ import { NgModule } from '@angular/core';
 import { FlexComponent } from './flex.component';
 import { FlexDirective } from './flex.directive';
 
-
+const ALL = [
+  FlexComponent,
+  FlexDirective,
+];
 
 @NgModule({
-  declarations: [
-    FlexDirective,
-    FlexComponent
-  ],
+  declarations: [ ALL ],
   imports: [
     CommonModule
   ],
-  exports: [
-    FlexDirective,
-    FlexComponent
-  ]
+  exports: [ ALL ]
 })
 export class FlexModule { }
