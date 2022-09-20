@@ -1,5 +1,32 @@
-@mixin me-classes() {
-  .me-flex {
-    display: flex;
+.me-flex {
+  display: flex;
+
+  &.column {
+    flex-direction: column;
+
+    &\/centred {
+      @extend .column, .centred;
+
+      &\/auto {
+        @extend .column\/centred, .auto;
+      }
+    }
+
+    &\/auto {
+      @extend .column, .auto;
+    }
+  }
+
+  &.centred {
+    align-items: center;
+    justify-content: center;
+
+    &\/auto {
+      @extend .centred, .auto;
+    }
+  }
+
+  &.auto {
+    flex: 1 1 auto;
   }
 }

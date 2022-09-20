@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { MeModule } from '@vieirabc/me';
 import { FlexModule } from '@vieirabc/me/flex';
 
 import { AppComponent } from './app.component';
@@ -12,8 +11,7 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     FlexModule,
-    BrowserModule,
-    MeModule
+    BrowserModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -8,7 +8,7 @@
 @use './styles/settings/types' as type;
 @use './styles/settings/material-palettes' as mat-palette;
 
-@use './styles/layouts/styles.scss' as styles;
+@use './styles/layouts/styles.scss';
 
 /*
 ** MATERIAL PALETTES
@@ -253,11 +253,8 @@
     typography: get-config()
   ));
 
-  @include mat.core-theme($my-theme);
+  @include mat.all-component-themes($my-theme);
   @include set-all-classes();
-  // @include me-classes();
 
   // @debug "Material Easy setup Successful!";
 }
-
-@include init();
